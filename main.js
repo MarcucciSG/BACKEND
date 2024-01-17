@@ -48,7 +48,7 @@ class ProductManager {
   async getProductsById(id) {
     try {
       const product = await this.getProducts();
-      const productFind = product.find((item) => item.id === id);
+      const productFind = product.find((item) => item.id == id);
     } catch (error) {
       console.log("Product Not found", error);
     }
@@ -56,16 +56,15 @@ class ProductManager {
 
   async updateProducts(id, product) {
     let data = await this.getProducts();
-    let i = data.findIndex((e) => e.id === id);
+    let i = data.findIndex((e) => e.id == id);
     data.splice(i, 1, product);
   }
 
-  async deleteProducts(id){
+  async deleteProducts(id) {
     const data = await this.getProducts();
-    let i = data.findIndex((e) => e.id === id);
+    let i = data.findIndex((e) => e.id == id);
     data.splice(i, 1);
     await fs.promises.writeFile(this.path, JSON.stringify(data));
-    
   }
 
   async saveFile(arrayProducts) {
