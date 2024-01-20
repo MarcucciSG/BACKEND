@@ -41,14 +41,23 @@ class ProductManager {
       return arrayProducts;
     } catch (error) {
       console.log("Error al leer el archivo", error);
+      throw error;
     }
-    //return this.products;
+    
   }
 
   async getProductsById(id) {
     try {
       const product = await this.getProducts();
-      const productFind = product.find((item) => item.id == id);
+      const productFind = product.find((item) => item.id === id);
+
+      if (!productFind) {
+        console.log("Producto no encontrado");
+        return null;
+      } else {
+        console.log("Producto encontrado");
+        return productFind;
+      }
     } catch (error) {
       console.log("Product Not found", error);
     }
@@ -81,28 +90,31 @@ class ProductManager {
 
 const manager = new ProductManager();
 
-console.log(manager.getProducts());
+//console.log(manager.getProducts());
 
-manager.addProduct(
+/*manager.addProduct(
   "Producto prueba",
   "esto es un producto prueba",
   500,
   "Sin imagen",
   "abc123",
   20
-);
+);*/
 
 //console.log(manager.getProducts());
 
-manager.addProduct(
+/*manager.addProduct(
   "Producto prueba",
   "esto es un producto prueba",
   500,
   "Sin imagen",
   "abc123",
   20
-);
+);*/
 
-console.log(manager.getProducts());
+//console.log(manager.getProducts());
 
-manager.getProductsById(2);
+//manager.getProductsById(2);
+
+
+module.exports = ProductManager;
