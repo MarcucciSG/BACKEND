@@ -15,4 +15,13 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/realtimeproducts", async (req, res) => {
+    try {
+      res.render("realTimeProducts");
+    } catch (error) {
+      console.log("Error en la vista", error);
+      res.status(500).json({ error: "error interno del servidor" });
+    }
+})
+
 module.exports = router;

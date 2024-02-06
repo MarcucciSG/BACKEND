@@ -32,6 +32,23 @@ const productManager = new ProductManager("./src/models/products.json");
 //socket.io server
 const io = socket(httpServer);
 
-io.on("connection", () => {
+io.on("connection", async (socket) => {
   console.log("cliente conectado");
+
+  socket.emit("products", await productManager.getProducts());
+
+  //deleteProducts
+  socket.on("deleteProduct", async (id) => {
+    await productManager.deleteProduct(id);
+
+    io.socket.emit("products", await productManager.getProducts());
+  });
+
+  //addProduct
+
+  socket.on("addProduct", async (product) => {
+    await productManager.addProduct(product);
+
+    io.socket.emit("products", await productManager.getProducts());
+  });
 });

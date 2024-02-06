@@ -1,14 +1,5 @@
 [
   {
-    "title": "producto prueba 25 ",
-    "description": "Este es un producto prueba 23",
-    "price": 150,
-    "thumbnail": "Sin imagen",
-    "code": "abc1231",
-    "stock": 25,
-    "id": 1
-  },
-  {
     "title": "silla ",
     "description": "es de madera",
     "price": 150,
@@ -104,5 +95,29 @@
     "status": true,
     "thumbnails": [],
     "id": 11
+  },
+  {
+    "title": "Iphone",
+    "description": "smarthphone",
+    "price": "500",
+    "img": "Sin imagen",
+    "code": "marc11",
+    "stock": "45",
+    "category": "Celulares",
+    "status": true,
+    "thumbnails": [],
+    "id": 12
+  },
+  {
+    "title": "Gabinete",
+    "description": "Gamer",
+    "price": "400",
+    "img": "Sin imagen",
+    "code": "marc12",
+    "stock": "55",
+    "category": "Gaming",
+    "status": true,
+    "thumbnails": [],
+    "id": 13
   }
 ]
