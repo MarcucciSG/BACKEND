@@ -7,6 +7,7 @@ const PUERTO = 8080;
 const productRouter = require("./Router/product.router.js");
 const cartRouter = require("./Router/cart.router.js");
 const viewsRouter = require("./Router/views.router.js");
+require("./database.js")
 //midleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

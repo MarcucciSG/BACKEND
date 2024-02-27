@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
-const ProductManager = require("../controlers/productManager.js");
-const productManager = new ProductManager("./src/models/products.json");
+const ProductManager = require("../controlers/productManagerDb.js");
+const productManager = new ProductManager();
 
 router.get("/", async (req, res) => {
     try {
@@ -20,9 +20,9 @@ router.get("/", async (req, res) => {
   });
   
   router.get("/:pid", async (req, res) => {
-    let id = req.params.pid;
+    const id = req.params.pid;
     try {
-      const product = await productManager.getProductById(parseInt(id));
+      const product = await productManager.getProductById(id);
       if (!product) {
         res.json({
           error: "Producto Not Found",
@@ -50,10 +50,10 @@ router.get("/", async (req, res) => {
   });
   
   router.put("/:pid", async (req, res) => {
-    let id = req.params.pid;
+  const id = req.params.pid;
     const productUpdate = req.body;
     try {
-      await productManager.updateProduct(parseInt(id), productUpdate);
+      await productManager.updateProduct( id , productUpdate);
       res.json({ message: "Producto Actualizado" });
     } catch {
       console.log("No se pudo actualizar", error);
@@ -62,11 +62,11 @@ router.get("/", async (req, res) => {
   });
   
   router.delete("/:pid", async (req, res) =>{
-    let id = req.params.pid;
+   const  id = req.params.pid;
     const productDelete = req.body;
   
     try {
-      await productManager.deleteProduct(parseInt(id), productDelete);
+      await productManager.deleteProduct(id, productDelete);
       res.json({message:"Producto Borrado"});
       } catch (error) {
         console.log("No se pudo borrar", error);
