@@ -3,10 +3,12 @@ const app = express();
 const exphbs = require("express-handlebars");
 const socket = require("socket.io");
 const PUERTO = 8080;
+require("./database.js")
 
 const productRouter = require("./Router/product.router.js");
 const cartRouter = require("./Router/cart.router.js");
 const viewsRouter = require("./Router/views.router.js");
+
 require("./database.js");
 //midleware
 app.use(express.json());
