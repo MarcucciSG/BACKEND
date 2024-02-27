@@ -3,7 +3,7 @@ const app = express();
 const exphbs = require("express-handlebars");
 const socket = require("socket.io");
 const PUERTO = 8080;
-require("./database.js")
+require("./database.js");
 
 const productRouter = require("./Router/product.router.js");
 const cartRouter = require("./Router/cart.router.js");
@@ -29,12 +29,12 @@ const httpServer = app.listen(PUERTO, () => {
 });
 
 //obteniendo el array de prodcutos
-const ProductManager = require("./controlers/productManager.js");
+const ProductManager = require("./controlers/productManagerDb.js");
 const productManager = new ProductManager("./src/models/products.json");
 
 //socket.io server
 const io = socket(httpServer);
-
+const MessageModel = require("./models/messages.model.js");
 io.on("connection", async (socket) => {
   console.log("cliente conectado");
 
@@ -56,14 +56,13 @@ io.on("connection", async (socket) => {
   });
 });
 
+//chat online
 io.on("connection", (socket) => {
   console.log("Nuevo usuario conectado");
 
   socket.on("message", async (data) => {
-    //Guardo el mensaje en MongoDB:
     await MessageModel.create(data);
 
-    //Obtengo los mensajes de MongoDB y se los paso al cliente:
     const messages = await MessageModel.find();
     console.log(messages);
     io.sockets.emit("message", messages);
