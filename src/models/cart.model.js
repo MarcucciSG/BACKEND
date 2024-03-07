@@ -6,7 +6,7 @@ const cartSchema = new moongose.Schema({
     {
       product: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Product",
+        ref: 'Product',
         required: true,
       },
       quantity: {
@@ -15,6 +15,12 @@ const cartSchema = new moongose.Schema({
       },
     },
   ],
+});
+
+//midleware poblacion
+cartSchema.pre('findOne', function (next) {
+  this.populate('products.product', '_id title price');
+  next();
 });
 
 const CartModel = moongose.model("carts",cartSchema);
