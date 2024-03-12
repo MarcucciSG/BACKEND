@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
+
 const ProductManager = require("../controlers/productManagerDb.js");
 const productManager = new ProductManager();
 
@@ -36,6 +37,8 @@ router.get("/", async (req, res) => {
           error: "Error interno del servidor"
       });
   }
+  
+  
 });
 
 //trae un product por ID
