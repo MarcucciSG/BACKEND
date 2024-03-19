@@ -35,4 +35,19 @@ router.get("/logout", (req, res) => {
   res.redirect("/");
 });
 
+// LOGIN DE GITHUB
+
+router.get("/github",passport.authenticate("github", {
+  scope:["user:email"]}) ,async (req, res) => {});
+
+  router.get("/githubcallback",passport.authenticate("github",
+  {failureRedirect:"/login"}), async (req, res) =>{
+    //recordar que github retorna el usuario, hay que agregarlo a la session
+    req.session.user = req.user;
+    req.session.login = true;
+    res.redirect("/profile");
+
+  } );
+  
+
 module.exports = router;
