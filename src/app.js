@@ -40,6 +40,7 @@ initializePassport()
 app.use(passport.initialize());
 app.use(passport.session());
 
+//Rutas
 app.use("/api/products", productRouter);
 app.use("/api/carts", cartRouter);
 app.use("/api/users", userRouter);
@@ -51,7 +52,7 @@ const httpServer = app.listen(PUERTO, () => {
 });
 
 //obteniendo el array de prodcutos
-const ProductManager = require("./controlers/productManagerDb.js");
+const ProductManager = require("./controlers/product.controller.js");
 const productManager = new ProductManager("./src/models/products.json");
 
 //socket.io server

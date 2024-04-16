@@ -4,9 +4,7 @@ const UserModel = require("../models/user.model.js");
 const { createHash } = require("../utils/hashBcrypt.js");
 const passport = require("passport");
 
-router.post(
-  "/",
-  passport.authenticate("register", { failureRedirect: "/failedregister" }),
+router.post("/",  passport.authenticate("register", { failureRedirect: "/failedregister" }),
   async (req, res) => {
     if (!req.user) return res.status(400).send({ status: "error" });
 
