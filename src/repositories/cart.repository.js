@@ -7,8 +7,7 @@ class CartRepository {
       await newCart.save();
       return newCart;
     } catch (error) {
-      console.log("Error al crear carrito nuevo", error);
-      throw error;
+      throw new Error("Error al crear carrito nuevo");
     }
   }
 
@@ -21,8 +20,7 @@ class CartRepository {
       }
       return cart;
     } catch (error) {
-      console.log("Error al encontrar un carrito por ID", error);
-      throw error;
+      throw new Error("Error al encontrar un carrito por ID");
     }
   }
 
@@ -32,7 +30,6 @@ class CartRepository {
       const existProduct = cart.products.find(
         (item) => item.product.toString() === productId
       );
-
       if (existProduct) {
         existProduct.quantity += quantity;
       } else {
@@ -43,8 +40,7 @@ class CartRepository {
       await cart.save();
       return cart;
     } catch (error) {
-      console.log("Error al agregar producto a un carrito", error);
-      throw error;
+      throw new Error("Error al agregar producto a un carrito");
     }
   }
 
@@ -63,11 +59,7 @@ class CartRepository {
       await cart.save();
       return cart;
     } catch (error) {
-      console.error(
-        "Error al eliminar el producto del carrito en el gestor",
-        error
-      );
-      throw error;
+      throw new Error("Error al eliminar el producto del carrito en el gestor");
     }
   }
 
@@ -78,17 +70,14 @@ class CartRepository {
       if (!cart) {
         throw new Error("Carrito no encontrado");
       }
-
       cart.products = updatedProducts;
 
       cart.markModified("products");
-
       await cart.save();
-
       return cart;
+
     } catch (error) {
-      console.error("Error al actualizar el carrito en el gestor", error);
-      throw error;
+      throw new Error("Error al actualizar el carrito en el gestor");
     }
   }
 
@@ -115,11 +104,9 @@ class CartRepository {
         throw new Error("Producto no encontrado en el carrito");
       }
     } catch (error) {
-      console.error(
-        "Error al actualizar la cantidad del producto en el carrito",
-        error
+      throw new Error(
+        "Error al actualizar la cantidad del producto en el carrito"
       );
-      throw error;
     }
   }
 
@@ -137,8 +124,7 @@ class CartRepository {
 
       return cart;
     } catch (error) {
-      console.error("Error al vaciar el carrito en el gestor", error);
-      throw error;
+      throw new Error("Error al vaciar el carrito en el gestor");
     }
   }
 }

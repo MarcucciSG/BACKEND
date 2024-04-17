@@ -6,7 +6,6 @@ const cookieParser = require("cookie-parser");
 const MongoStore = require("connect-mongo");
 const initializePassport = require("./config/passport.config.js");
 const passport = require("passport");
-const socket = require("socket.io");
 const PUERTO = 8080;
 require("./database.js");
 
@@ -55,39 +54,7 @@ const httpServer = app.listen(PUERTO, () => {
 const ProductManager = require("./controlers/product.controller.js");
 const productManager = new ProductManager("./src/models/products.json");
 
-//socket.io server
-const io = socket(httpServer);
-const MessageModel = require("./models/messages.model.js");
-io.on("connection", async (socket) => {
-  console.log("cliente conectado");
 
-  socket.emit("products", await productManager.getProducts());
-
-  //deleteProducts
-  socket.on("deleteProduct", async (id) => {
-    await productManager.deleteProduct(id);
-
-    io.socket.emit("products", await productManager.getProducts());
-  });
-
-  //addProduct
-
-  socket.on("addProduct", async (product) => {
-    await productManager.addProduct(product);
-
-    io.socket.emit("products", await productManager.getProducts());
-  });
-});
-
-//chat online
-io.on("connection", (socket) => {
-  console.log("Nuevo usuario conectado");
-
-  socket.on("message", async (data) => {
-    await MessageModel.create(data);
-
-    const messages = await MessageModel.find();
-    console.log(messages);
-    io.sockets.emit("message", messages);
-  });
-});
+//chat de websocket
+const SocketController = require("./sockets/socket.controller.js");
+new SocketController(httpServer);
