@@ -6,6 +6,8 @@ const cookieParser = require("cookie-parser");
 const MongoStore = require("connect-mongo");
 const initializePassport = require("./config/passport.config.js");
 const passport = require("passport");
+const cors = require("cors");
+const path = require("path");
 const PUERTO = 8080;
 require("./database.js");
 
@@ -18,7 +20,23 @@ const viewsRouter = require("./Router/views.router.js");
 //midleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static("./src/public"));
+//app.use(express.static("./src/public"));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors())
+
+//Handlebars
+app.engine("handlebars", exphbs.engine());
+app.set("view engine", "handlebars");
+app.set("views", "./src/views");
+
+//AuthMiddleware
+const authMiddleware = require("./middleware/authMiddleware.js");
+app.use(authMiddleware);
+
+//passport
+initializePassport()
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(cookieParser());
 app.use(session({
     secret:"secretCoder",
@@ -28,16 +46,6 @@ app.use(session({
         mongoUrl: "mongodb+srv://marcuccisantiago8:6DkBMXU3lAE3TPUU@cluster0.fehywwf.mongodb.net/Ecommerce?retryWrites=true&w=majority&appName=Cluster0", ttl: 100
     })
 }))
-
-//Handlebars
-app.engine("handlebars", exphbs.engine());
-app.set("view engine", "handlebars");
-app.set("views", "./src/views");
-
-//passport
-initializePassport()
-app.use(passport.initialize());
-app.use(passport.session());
 
 //Rutas
 app.use("/api/products", productRouter);

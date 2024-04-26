@@ -1,5 +1,10 @@
+const TicketModel = require("../models/ticket.model.js");
+const UserModel = require("../models/user.model.js");
 const CartRepository = require("../repositories/cart.repository.js");
 const cartRepository = new CartRepository();
+const ProductRepository = require("../repositories/product.repository.js");
+const productRepository = new ProductRepository();
+const { generateUniqueCode, calcularTotal } = require("../utils/cartUtils.js");
 
 class CartController {
   async newCart(req, res) {
@@ -138,6 +143,54 @@ class CartController {
         status: "error",
         error: "Error interno del servidor",
       });
+    }
+  }
+
+  async endPurchase(req, res) {
+    const cartId = req.params.cid;
+    try {
+      //obtenemos el cart y sus products
+      const cart = await cartRepository.getCartById(cartId);
+      const products = cart.products;
+      //inicializamos un array para los productos no disponibles
+      const productsNotAvaible = [];
+
+      //verificar stock y actuzalizar products disponibles
+      for (const item of products) {
+        const productId = item.product;
+        const product = await productRepository.getProductById(productId);
+        if (product.stock >= item.quantity) {
+          //si hay stock restar cantidad
+          product.stock -= item.quantity;
+          await product.save();
+        } else {
+          //si no hay stock, agrega id product al array
+          productsNotAvaible.push(productId);
+        }
+      }
+
+      const userWithCart = await UserModel.findOne({ cart: cartId });
+      //crear ticket de compra
+      const ticket = new TicketModel({
+        code: generateUniqueCode(),
+        purchase_datatime: new Date(),
+        amount: calcularTotal(cart.products),
+        pruchaser: userWithCart._id,
+      });
+      await ticket.save();
+
+      //elima del cart products que se compraron
+      cart.products = cart.products.filter((item) =>
+        productsNotAvaible.some((productId) => productId.equals(item.product))
+      );
+
+      // save cart update en la DB
+      await cart.save();
+
+      res.status(200).json({ productsNotAvaible });
+    } catch (error) {
+      console.error("Error al procesar la compra:", error);
+      res.status(500).json({ error: "Error interno del servidor" });
     }
   }
 }

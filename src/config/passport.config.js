@@ -1,65 +1,25 @@
 const passport = require("passport");
-const local = require("passport-local");
-
-//github strategy
-const GitHubStrategy = require("passport-github2");
-
+const jwt = require("passport-jwt");
+const JWTStrategy = jwt.Strategy;
+const ExtractJwt = jwt.ExtractJwt;
 const UserModel = require("../models/user.model.js");
-const { createHash, isValidPassword } = require("../utils/hashBcrypt.js");
-
-const localStrategy = local.Strategy;
 
 const initializePassport = () => {
   passport.use(
-    "register",
-    new localStrategy(
+    "jwt",
+    new JWTStrategy(
       {
-        passReqToCallback: true, // le decis que queres acceder al objeto request
-        usernameField: "email",
+        jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]), // Utiliza ExtractJwt.fromExtractors para extraer el token de la cookie
+        secretOrKey: "coderhouse",
       },
-      async (req, username, password, done) => {
-        const { first_name, last_name, email, age } = req.body;
+      async (jwt_payload, done) => {
         try {
-          //verificamos si ya existe un registro con ese email
-          let user = await UserModel.findOne({ email: email });
-          if (user) return done(null, false);
-          //si no existe, creo un registro nuevo
-          let newUser = {
-            first_name,
-            last_name,
-            email,
-            age,
-            password: createHash(password),
-          };
-
-          let result = await UserModel.create(newUser);
-          //si todo resulta bien, podemos mandar done con el usuario generado
-          return done(null, result);
-        } catch (error) {
-          return done(error);
-        }
-      }
-    )
-  );
-
-  //agregamos otra estrategia, para el login
-  passport.use(
-    "login",
-    new localStrategy(
-      {
-        usernameField: "email",
-      },
-      async (email, password, done) => {
-        try {
-          //primero verifico si existe un usuario con ese email
-          const user = await UserModel.findOne({ email });
+          // Busca el usuario en la base de datos usando el ID del payload JWT
+          const user = await UserModel.findById(jwt_payload.user._id);
           if (!user) {
-            console.log("Este usuario no existe");
             return done(null, false);
           }
-          //si existe verifico la contrasela
-          if (!isValidPassword(password, user)) return done(null, false);
-          return done(null, user);
+          return done(null, user); // Devuelve el usuario encontrado
         } catch (error) {
           return done(error);
         }
@@ -67,16 +27,9 @@ const initializePassport = () => {
     )
   );
 
-  passport.serializeUser((user, done) => {
-    done(null, user._id);
-  });
-
-  passport.deserializeUser(async (id, done) => {
-    let user = await UserModel.findById({ _id: id });
-    done(null, user);
-  });
-
   //estrategia para GITHUB
+  //github strategy
+  const GitHubStrategy = require("passport-github2");
 
   passport.use(
     "github",
@@ -111,6 +64,14 @@ const initializePassport = () => {
       }
     )
   );
+};
+
+const cookieExtractor = (req) => {
+  let token = null;
+  if (req && req.cookies) {
+    token = req.cookies["coderCookieToken"];
+  }
+  return token;
 };
 
 module.exports = initializePassport;

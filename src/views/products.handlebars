@@ -1,11 +1,8 @@
-<h1>Mi Perfil</h1>
-<p>Bienvenido!, {{user.first_name}} {{user.last_name}}!</p>
-<p>Email: {{user.email}}</p>
-<p>Edad: {{user.age}}</p>
-<a href="/api/sessions/logout">Logout</a>
-
-
-<h1> Productos </h1>
+<div>
+    <h1> Productos </h1>
+    <a href="/carts/{{cartId}}">
+    </a>
+</div>
 {{#each productos}}
 <div>
     <h2>{{title}}</h2>
@@ -13,7 +10,9 @@
     <p>{{description}}</p>
     <p>Price: ${{price}}</p>
     <p>Category: {{category}} </p>
-    <button> Agregar al Carrito </button>
+    <form action="/api/carts/{{../cartId}}/product/{{id}}" method="POST">
+                    <button type="submit">Agregar al Carrito</button>
+                </form>
 </div>
 {{/each}}
 
