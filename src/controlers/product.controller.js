@@ -1,5 +1,6 @@
 const ProducRepository = require("../repositories/product.repository.js");
 const productRepository = new ProducRepository();
+const generateProducts = require("../utils/utilsMocks.js")
 
 
 class ProductController{
@@ -90,6 +91,8 @@ class ProductController{
     res.status(500).json({ message: "Error del servidor" });
   }
   }
+
+ 
 }
 
 module.exports = ProductController;

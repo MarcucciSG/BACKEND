@@ -28,42 +28,42 @@ const initializePassport = () => {
   );
 
   //estrategia para GITHUB
-  //github strategy
-  const GitHubStrategy = require("passport-github2");
+  // //github strategy
+  // const GitHubStrategy = require("passport-github2");
 
-  passport.use(
-    "github",
-    new GitHubStrategy(
-      {
-        clientID: "Iv1.b765065759912ea5",
-        clientSecret: "1828af53b2adc5eab4aca7d581f17f1c6f606dec",
-        callbackURL: "http://localhost:8080/api/sessions/githubcallback",
-      },
-      async (accessToken, refreshToken, profile, done) => {
-        try {
-          //nos fijamos si el usuario existe
-          let user = await UserModel.findOne({ email: profile._json.email });
-          //si no existe lo creamos
-          if (!user) {
-            let newUser = {
-              first_name: profile._json.name,
-              last_name: "",
-              age: undefined,
-              email: profile._json.email,
-              password: "",
-            };
-            //guardamos el nuevo usuario en mongDB
-            let result = await UserModel.create(newUser);
-            done(null, result);
-          } else {
-            done(null, user);
-          }
-        } catch (error) {
-          return done(error);
-        }
-      }
-    )
-  );
+  // passport.use(
+  //   "github",
+  //   new GitHubStrategy(
+  //     {
+  //       clientID: "Iv1.b765065759912ea5",
+  //       clientSecret: "1828af53b2adc5eab4aca7d581f17f1c6f606dec",
+  //       callbackURL: "http://localhost:8080/api/sessions/githubcallback",
+  //     },
+  //     async (accessToken, refreshToken, profile, done) => {
+  //       try {
+  //         //nos fijamos si el usuario existe
+  //         let user = await UserModel.findOne({ email: profile._json.email });
+  //         //si no existe lo creamos
+  //         if (!user) {
+  //           let newUser = {
+  //             first_name: profile._json.name,
+  //             last_name: "",
+  //             age: undefined,
+  //             email: profile._json.email,
+  //             password: "",
+  //           };
+  //           //guardamos el nuevo usuario en mongDB
+  //           let result = await UserModel.create(newUser);
+  //           done(null, result);
+  //         } else {
+  //           done(null, user);
+  //         }
+  //       } catch (error) {
+  //         return done(error);
+  //       }
+  //     }
+  //   )
+  // );
 };
 
 const cookieExtractor = (req) => {
