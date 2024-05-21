@@ -5,6 +5,8 @@ const cartRepository = new CartRepository();
 const ProductRepository = require("../repositories/product.repository.js");
 const productRepository = new ProductRepository();
 const { generateUniqueCode, calcularTotal } = require("../utils/cartUtils.js");
+const EmailManager = require("../Service/emails.js");
+const emailManager = new EmailManager();
 
 class CartController {
   async newCart(req, res) {
@@ -186,6 +188,8 @@ class CartController {
 
       // save cart update en la DB
       await cart.save();
+
+      await emailManager.enviarCorreoCompra(userWithCart.email, userWithCart.first_name, ticket._id);
 
       res.status(200).json({ productsNotAvaible });
     } catch (error) {

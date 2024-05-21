@@ -110,6 +110,18 @@ class ViewsController {
     async renderHome(req, res) {
         res.render("home");
     }
+
+    async renderResetPassword(req, res){
+        res.render("passwordreset")
+    }
+
+    async renderChangePassword(req,res){
+        res.render("passwordchange")
+    }
+
+    async renderConfirmacion(req,res){
+        res.render("confirmacion-envio")
+    }
 }
 
 module.exports = ViewsController;

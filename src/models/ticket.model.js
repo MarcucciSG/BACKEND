@@ -18,7 +18,7 @@ const ticketSchema = new moongose.Schema({
     required: true,
   },
 
-  pruchaser: {
+  purchaser: {
     type: moongose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
