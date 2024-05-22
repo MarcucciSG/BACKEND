@@ -5,13 +5,16 @@
   <p>Rol: {{user.role}}</p>
 
   <form action="/api/users/logout" method="POST">
-    <button  type="submit">Logout</button>
+    <button type="submit">Logout</button>
   </form>
 
   {{#if this.isAdmin}}
-    <a  href="/realtimeproducts">Modificar Productos</a>
+    <a href="/realtimeproducts">Modificar Productos</a>
   {{else}}
-    <a  href="/chat">Chat en vivo</a>
-    <a  href="/products">Tienda</a>
+    {{#if this.isPremium}}
+      <a href="/realtimeproducts">Panel Premium</a>
+    {{/if}}
+    <a href="/chat">Chat en vivo</a>
+    <a href="/products">Tienda</a>
   {{/if}}
 </div>

@@ -1,6 +1,8 @@
 
 <h1>Real Time Products</h1>
 <h2>Productos actualizados en tiempo real</h2>
+<h3 id="role">{{role}}</h3>
+<h3 id="email">{{email}}</h3>
 
 <div id="conteinerProducts"></div>
 
@@ -15,10 +17,10 @@
     <input type="number" id="stock" placeholder="Stock">
     <input type="text" id="category" placeholder="Categoria">
     <input type="text" id="status" value="true">
-    <button id="btnSend"> Enviar </button>
+    <button type="button" id="btnSend"> Enviar </button>
 
 
 </form>
 
 <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
-<script src="js/index.js"></script>
+<script src="js/realtime.js"></script>
