@@ -1,0 +1,131 @@
+paths:
+  /cart:
+    post:
+      summary: Crear un nuevo carrito de compras
+      responses:
+        200:
+          description: Devuelve el nuevo carrito creado
+    get:
+      summary: Obtener productos de un carrito específico
+      parameters:
+        - name: cid
+          in: path
+          description: ID del carrito
+          required: true
+          type: string
+      responses:
+        200:
+          description: Devuelve la lista de productos en el carrito
+    delete:
+      summary: Vaciar un carrito
+      parameters:
+        - name: cid
+          in: path
+          description: ID del carrito
+          required: true
+          type: string
+      responses:
+        200:
+          description: El carrito ha sido vaciado correctamente
+  /cart/{cid}/product/{pid}:
+    post:
+      summary: Agregar productos a un carrito
+      parameters:
+        - name: cid
+          in: path
+          description: ID del carrito
+          required: true
+          type: string
+        - name: pid
+          in: path
+          description: ID del producto
+          required: true
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quantity:
+                  type: integer
+                  description: Cantidad del producto a agregar (por defecto 1)
+      responses:
+        200:
+          description: Devuelve la lista de productos actualizada en el carrito
+    delete:
+      summary: Eliminar un producto específico del carrito
+      parameters:
+        - name: cid
+          in: path
+          description: ID del carrito
+          required: true
+          type: string
+        - name: pid
+          in: path
+          description: ID del producto
+          required: true
+          type: string
+      responses:
+        200:
+          description: Producto eliminado correctamente del carrito
+  /cart/{cid}/purchase:
+    post:
+      summary: Finalizar la compra y generar un ticket
+      parameters:
+        - name: cid
+          in: path
+          description: ID del carrito
+          required: true
+          type: string
+      responses:
+        200:
+          description: La compra ha sido procesada correctamente
+    put:
+      summary: Actualizar productos en el carrito
+      parameters:
+        - name: cid
+          in: path
+          description: ID del carrito
+          required: true
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                products:
+                  type: array
+                  description: Lista de productos actualizados en el carrito
+                  items:
+                    type: object
+      responses:
+        200:
+          description: Carrito actualizado correctamente
+  /cart/{cid}/product/{pid}:
+    put:
+      summary: Actualizar la cantidad de un producto en el carrito
+      parameters:
+        - name: cid
+          in: path
+          description: ID del carrito
+          required: true
+          type: string
+        - name: pid
+          in: path
+          description: ID del producto
+          required: true
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quantity:
+                  type: integer
+                  description: Nueva cantidad del producto en el carrito
+      responses:
+        200:
+          description: Cantidad del producto actualizada correctamente

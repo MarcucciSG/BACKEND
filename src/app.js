@@ -8,6 +8,9 @@ const initializePassport = require("./config/passport.config.js");
 const passport = require("passport");
 const addLogger = require("./utils/logger.js");
 const configObject = require("./config/config.js");
+const swaggerJSDoc = require("swagger-jsdoc");
+const swaggerUiExpress = require ("swagger-ui-express");
+const specs = require("./config/ConfigSwagger.js")
 const cors = require("cors");
 const path = require("path");
 const PUERTO = 8080;
@@ -23,6 +26,7 @@ const viewsRouter = require("./Router/views.router.js");
 //midleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use("/apidocs", swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
 //app.use(express.static("./src/public"));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors())

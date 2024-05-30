@@ -1,0 +1,109 @@
+paths:
+  /products:
+    get:
+      summary: Obtener lista de productos
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Agregar un nuevo producto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '201':
+          description: Producto agregado
+    parameters:
+      - in: query
+        name: limit
+        schema:
+          type: integer
+        description: Cantidad de productos por página
+      - in: query
+        name: page
+        schema:
+          type: integer
+        description: Número de página
+      - in: query
+        name: sort
+        schema:
+          type: string
+        description: Campo para ordenar los productos
+      - in: query
+        name: query
+        schema:
+          type: string
+        description: Búsqueda de productos por palabra clave
+  /products/{pid}:
+    get:
+      summary: Obtener un producto por ID
+      parameters:
+        - in: path
+          name: pid
+          required: true
+          schema:
+            type: string
+          description: ID del producto
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Producto no encontrado
+    put:
+      summary: Actualizar un producto por ID
+      parameters:
+        - in: path
+          name: pid
+          required: true
+          schema:
+            type: string
+          description: ID del producto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '200':
+          description: Producto actualizado
+        '500':
+          description: Error del servidor
+    delete:
+      summary: Borrar un producto por ID
+      parameters:
+        - in: path
+          name: pid
+          required: true
+          schema:
+            type: string
+          description: ID del producto
+      responses:
+        '200':
+          description: Producto borrado
+        '500':
+          description: Error del servidor
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Nombre del producto
+        price:
+          type: number
+          format: double
+          description: Precio del producto
+        description:
+          type: string
+          description: Descripción del producto
+        category:
+          type: string
+          description: Categoría del producto
+      required:
+        - name
+        - price
