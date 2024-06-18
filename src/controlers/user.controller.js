@@ -4,8 +4,12 @@ const jwt = require("jsonwebtoken");
 const { createHash, isValidPassword } = require("../utils/hashBcrypt.js");
 const UserDTO = require("../dto/user.dto.js");
 const { generateResetToken } = require("../utils/tokenreset.js");
+const UserRepository = require("../repositories/user.repository.js");
+const userRepository = new UserRepository();
 const EmailManager = require("../Service/emails.js");
 const emailManager = new EmailManager();
+
+
 
 class UserController {
   async register(req, res) {
@@ -65,6 +69,9 @@ class UserController {
         expiresIn: "1h",
       });
 
+      usuarioEncontrado.last_connection = new Date();
+      await usuarioEncontrado.save();
+
       res.cookie("coderCookieToken", token, {
         maxAge: 3600000,
         httpOnly: true,
@@ -89,6 +96,16 @@ class UserController {
   }
 
   async logout(req, res) {
+    if (req.user) {
+      try {        
+        req.user.last_connection = new Date();
+        await req.user.save();
+      } catch (error) {
+        console.error(error);
+        res.status(500).send("Error interno del servidor");
+        return;
+      }
+    }
     res.clearCookie("coderCookieToken");
     res.redirect("/login");
   }
@@ -169,21 +186,32 @@ class UserController {
   }
 
   async changeRolePremium(req, res) {
-    const {uid} = req.params;
-    try {
-        const user = await UserModel.findById(uid);
+   const { uid } = req.params;
+        try {
+            const user = await userRepository.findById(uid);
 
-        if(!user) {
-            return res.status(404).send("Usuario no encontrado");
+            if (!user) {
+                return res.status(404).send("Usuario no encontrado");
+            }
+
+            // Verificamos si el usuario tiene la documentacion requerida: 
+            const documentRequire = ["Identificacion", "Comprobante de domicilio", "Comprobante de estado de cuenta"];
+
+            const userDocuments = user.documents.map(doc => doc.name);
+
+            const tieneDocument = documentRequire.every(doc => userDocuments.includes(doc));
+
+            if (!tieneDocument) {
+                return res.status(400).send("El usuario tiene que completar toda la documentacion requerida");
+            }
+
+            const newRol = user.role === "usuario" ? "premium" : "usuario";
+
+            res.send(newRol); 
+
+        } catch (error) {
+            res.status(500).send("Error del servidor");
         }
-
-        const newRole = user.role === "usuario" ? "premium" : "usuario";
-
-        const update = await UserModel.findByIdAndUpdate(uid, {role: newRole});
-        res.json(update);
-    } catch (error) {
-        res.status(500).json({ message: 'Error interno del servidor' });
-    }
   }
 }
 
