@@ -108,7 +108,7 @@ class ViewsController {
     }
 
     async renderHome(req, res) {
-        res.render("home");
+        res.render("login");
     }
 
     async renderResetPassword(req, res){

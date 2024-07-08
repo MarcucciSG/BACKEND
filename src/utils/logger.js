@@ -1,6 +1,7 @@
 const winston = require("winston");
 const configObject = require("../config/config.js");
 
+
 const niveles = {
   nivel: {
     fatal: 0,
@@ -45,7 +46,7 @@ const loggerProduccion = winston.createLogger({
 
 //Determinar que logger utilizar segun el entorno:
 
-const logger = node_env === "produccion" ? loggerProduccion : loggerDesarrollo;
+const logger =  "produccion" ? loggerProduccion : loggerDesarrollo;
 
 //Creamos nuestro propio middleware donde vamos a usar este logger:
 const addLogger = (req, res, next) => {

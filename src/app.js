@@ -26,7 +26,7 @@ const viewsRouter = require("./Router/views.router.js");
 //midleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("/apidocs", swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
+app.use("/api/docs", swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
 //app.use(express.static("./src/public"));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors())
@@ -66,7 +66,7 @@ app.use("/", viewsRouter);
 //Ruta de TESTEO: 
 
 app.get("/loggertest", (req, res) => {
-  req.logger.error("Error fatal, vamos a morir");
+  req.logger.error("Error fatal");
   req.logger.debug("Mensaje de debug");
   req.logger.info("Mensaje de Info");
   req.logger.warning("Mensaje de Warning");
